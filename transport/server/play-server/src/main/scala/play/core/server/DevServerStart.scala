@@ -241,8 +241,9 @@ object DevServerStart {
           // between the actor system for dev mode and the application actor system
           // users can resolve it by add a specific configuration for dev mode.
             .getConfig("play.akka.dev-mode")
-            // We then fallback to the app configuration to avoid losing configurations
-            // made using devSettings, system properties and application.conf itself.
+            // We then fallback to the root configuration to avoid losing configurations
+            // from the "akka.*" config picked up from the reference*.conf's and
+            // made to the "akka.*" config using devSettings or system properties.
             .withFallback(serverConfig.configuration.underlying)
         }
         val actorSystem = ActorSystem("play-dev-mode", devModeAkkaConfig)
