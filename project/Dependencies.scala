@@ -7,7 +7,7 @@ import Keys._
 import buildinfo.BuildInfo
 
 object Dependencies {
-  val akkaVersion: String = sys.props.getOrElse("akka.version", "2.6.3")
+  val akkaVersion: String = sys.props.getOrElse("akka.version", "2.6.4")
   val akkaHttpVersion     = "10.1.11"
 
   val sslConfig = "com.typesafe" %% "ssl-config-core" % "0.4.2"
@@ -16,7 +16,7 @@ object Dependencies {
 
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.3"
 
-  val specs2Version = "4.8.3"
+  val specs2Version = "4.9.3"
   val specs2Deps = Seq(
     "specs2-core",
     "specs2-junit",
@@ -30,8 +30,8 @@ object Dependencies {
     "org.scalacheck" %% "scalacheck"        % "1.14.3"      % Test
   )
 
-  val jacksonVersion         = "2.10.2"
-  val jacksonDatabindVersion = "2.10.2"
+  val jacksonVersion         = "2.10.3"
+  val jacksonDatabindVersion = "2.10.3"
   val jacksonDatabind        = Seq("com.fasterxml.jackson.core" % "jackson-databind" % jacksonDatabindVersion)
   val jacksons = Seq(
     "com.fasterxml.jackson.core"     % "jackson-core",
@@ -46,9 +46,9 @@ object Dependencies {
   val slf4j        = Seq("slf4j-api", "jul-to-slf4j", "jcl-over-slf4j").map("org.slf4j" % _ % slf4jVersion)
   val slf4jSimple  = "org.slf4j" % "slf4j-simple" % slf4jVersion
 
-  val guava      = "com.google.guava"         % "guava"        % "28.2-jre"
+  val guava      = "com.google.guava"         % "guava"        % "29.0-jre"
   val findBugs   = "com.google.code.findbugs" % "jsr305"       % "3.0.2" // Needed by guava
-  val mockitoAll = "org.mockito"              % "mockito-core" % "3.2.4"
+  val mockitoAll = "org.mockito"              % "mockito-core" % "3.3.3"
 
   val h2database    = "com.h2database"   % "h2"    % "1.4.200"
   val derbyDatabase = "org.apache.derby" % "derby" % "10.15.2.0"
@@ -62,7 +62,7 @@ object Dependencies {
   // currently jjwt needs the JAXB Api package in JDK 9+
   // since it actually uses javax/xml/bind/DatatypeConverter
   // See: https://github.com/jwtk/jjwt/issues/317
-  val jaxbApi = "jakarta.xml.bind" % "jakarta.xml.bind-api" % "2.3.2"
+  val jaxbApi = "jakarta.xml.bind" % "jakarta.xml.bind-api" % "2.3.3"
 
   val jdbcDeps = Seq(
     "com.zaxxer"         % "HikariCP" % "3.4.2",
@@ -75,19 +75,19 @@ object Dependencies {
 
   val jpaDeps = Seq(
     "org.hibernate.javax.persistence" % "hibernate-jpa-2.1-api" % "1.0.2.Final",
-    "org.hibernate"                   % "hibernate-core"        % "5.4.12.Final" % "test"
+    "org.hibernate"                   % "hibernate-core"        % "5.4.14.Final" % "test"
   )
 
   def scalaReflect(scalaVersion: String) = "org.scala-lang" % "scala-reflect" % scalaVersion % "provided"
   val scalaJava8Compat                   = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.1"
   val scalaParserCombinators             = Seq("org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2")
 
-  val springFrameworkVersion = "5.2.3.RELEASE"
+  val springFrameworkVersion = "5.2.5.RELEASE"
 
   val javaDeps = Seq(
     scalaJava8Compat,
     // Used by the Java routing DSL
-    "net.jodah"         % "typetools" % "0.5.0"
+    "net.jodah"         % "typetools" % "0.6.2"
   ) ++ specs2Deps.map(_ % Test)
 
   val joda = Seq(
@@ -96,7 +96,7 @@ object Dependencies {
   )
 
   val javaFormsDeps = Seq(
-    "org.hibernate.validator" % "hibernate-validator" % "6.1.2.Final",
+    "org.hibernate.validator" % "hibernate-validator" % "6.1.3.Final",
     ("org.springframework" % "spring-context" % springFrameworkVersion)
       .exclude("org.springframework", "spring-aop")
       .exclude("org.springframework", "spring-beans")
@@ -122,7 +122,7 @@ object Dependencies {
     logback
   ).map(_ % Test)
 
-  val guiceVersion = "4.2.2"
+  val guiceVersion = "4.2.3"
   val guiceDeps = Seq(
     "com.google.inject"            % "guice"                % guiceVersion,
     "com.google.inject.extensions" % "guice-assistedinject" % guiceVersion
@@ -147,7 +147,7 @@ object Dependencies {
         sslConfig
       ) ++ scalaParserCombinators ++ specs2Deps.map(_ % Test) ++ javaTestDeps
 
-  val nettyVersion = "4.1.45.Final"
+  val nettyVersion = "4.1.48.Final"
 
   val netty = Seq(
     "com.typesafe.netty" % "netty-reactive-streams-http" % "2.0.4",
@@ -158,7 +158,7 @@ object Dependencies {
 
   val jimfs = "com.google.jimfs" % "jimfs" % "1.1"
 
-  val okHttp = "com.squareup.okhttp3" % "okhttp" % "4.4.0"
+  val okHttp = "com.squareup.okhttp3" % "okhttp" % "4.5.0"
 
   def routesCompilerDependencies(scalaVersion: String) = {
     specs2Deps.map(_ % Test) ++ Seq(specsMatcherExtra % Test) ++ scalaParserCombinators ++ (logback % Test :: Nil)
@@ -233,7 +233,7 @@ object Dependencies {
     // slowing down the build. So the open range deps were removed and we can re-add
     // them using a specific version. Using an open range is also not good for the
     // local cache.
-    ("org.seleniumhq.selenium" % "htmlunit-driver" % "2.37.0").excludeAll(
+    ("org.seleniumhq.selenium" % "htmlunit-driver" % "2.39.0").excludeAll(
       ExclusionRule("org.seleniumhq.selenium", "selenium-api"),
       ExclusionRule("org.seleniumhq.selenium", "selenium-support")
     ),
