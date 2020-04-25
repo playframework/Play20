@@ -11,29 +11,29 @@ import scala.compat.java8.FutureConverters
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContextExecutor
 
-object HttpExecutionContext {
+object ClassLoaderExecutionContext {
 
   /**
-   * Create an HttpExecutionContext with values from the current thread.
+   * Create an ClassLoaderExecutionContext with values from the current thread.
    */
   def fromThread(delegate: ExecutionContext): ExecutionContextExecutor =
-    new HttpExecutionContext(
+    new ClassLoaderExecutionContext(
       Thread.currentThread().getContextClassLoader(),
       delegate
     )
 
   /**
-   * Create an HttpExecutionContext with values from the current thread.
+   * Create an ClassLoaderExecutionContext with values from the current thread.
    *
    * This method is necessary to prevent ambiguous method compile errors since ExecutionContextExecutor
    */
   def fromThread(delegate: ExecutionContextExecutor): ExecutionContextExecutor = fromThread(delegate: ExecutionContext)
 
   /**
-   * Create an HttpExecutionContext with values from the current thread.
+   * Create an ClassLoaderExecutionContext with values from the current thread.
    */
   def fromThread(delegate: Executor): ExecutionContextExecutor =
-    new HttpExecutionContext(
+    new ClassLoaderExecutionContext(
       Thread.currentThread().getContextClassLoader(),
       FutureConverters.fromExecutor(delegate)
     )
@@ -53,7 +53,7 @@ object HttpExecutionContext {
  * Manages execution to ensure that the given context ClassLoader is set correctly
  * in the current thread. Actual execution is performed by a delegate ExecutionContext.
  */
-class HttpExecutionContext(contextClassLoader: ClassLoader, delegate: ExecutionContext)
+class ClassLoaderExecutionContext(contextClassLoader: ClassLoader, delegate: ExecutionContext)
     extends ExecutionContextExecutor {
   override def execute(runnable: Runnable) =
     delegate.execute(() => {
@@ -74,7 +74,7 @@ class HttpExecutionContext(contextClassLoader: ClassLoader, delegate: ExecutionC
     if (delegatePrepared eq delegate) {
       this
     } else {
-      new HttpExecutionContext(contextClassLoader, delegatePrepared)
+      new ClassLoaderExecutionContext(contextClassLoader, delegatePrepared)
     }
   }
 }
