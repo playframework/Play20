@@ -11,7 +11,7 @@ import play.api.mvc._
 import play.api.routing.HandlerDef
 import play.api.routing.Router
 
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 
 /**
  * A route
