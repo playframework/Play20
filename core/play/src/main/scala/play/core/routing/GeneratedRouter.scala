@@ -29,7 +29,7 @@ object Route {
    * Create a params extractor from the given method and path pattern.
    */
   def apply(method: String, pathPattern: PathPattern) = new ParamsExtractor {
-    def unapply(request: RequestHeader): Option[RouteParams] = {
+    def unapply(request: RequestHeader): Option[RouteParams] =
       if (method == request.method) {
         pathPattern(request.path).map { groups =>
           RouteParams(groups, request.queryString)
@@ -37,7 +37,6 @@ object Route {
       } else {
         None
       }
-    }
   }
 }
 
