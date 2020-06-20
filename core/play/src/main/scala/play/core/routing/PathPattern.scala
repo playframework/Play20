@@ -74,7 +74,8 @@ case class PathPattern(parts: Seq[PathPart]) {
   def apply(path: String): Option[Map[String, Either[Throwable, String]]] = {
     val matcher = regex.matcher(path)
     if (matcher.matches)
-      Some(groups.mapValues(_(matcher)).toMap) else None
+      Some(groups.mapValues(_(matcher)).toMap)
+    else None
   }
 
   override def toString =
