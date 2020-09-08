@@ -164,7 +164,6 @@ Here's an example of configuration that uses a rolling file appender, as well as
 This demonstrates a few useful features:
 
 - It uses `RollingFileAppender` which can help manage growing log files. See more [details here](https://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy).
-- It writes log files to a directory external to the application so they will not affected by upgrades, etc.
 - The `FILE` appender uses an expanded message format that can be parsed by third party log analytics providers such as Sumo Logic.
 - The `access` logger is routed to a separate log file using the `ACCESS_FILE` appender.
 - Any log messages sent with the "SECURITY" marker attached are logged to the `security.log` file using the [EvaluatorFilter](https://logback.qos.ch/manual/filters.html#evalutatorFilter) and the [OnMarkerEvaluator](https://logback.qos.ch/manual/appenders.html#OnMarkerEvaluator).
@@ -188,6 +187,38 @@ If you want to reference properties that are defined in the `application.conf` f
         <pattern>context = ${my.property.defined.in.application.conf} %message%n</pattern>
     </encoder>
 </appender>
+```
+
+This would also allow you to, for example, customize the location of the log files, perhaps placing them in a location external to the application home to protect them against app upgrades. You might set an environment variable:
+
+```
+$ start -Dlogger.path=/opt/log/my.app
+```
+
+Next, provide a default and overridden value in application.conf:
+
+```
+play.logger {
+  path = "/tmp/log/my.app"
+  path = ${?logger.path}
+  includeConfigProperties = true
+}
+
+```
+
+And finally, use the value in your logback configuration file:
+
+```
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${play.logger.path}/app.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${play.logger.path}/application-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger in %thread - %message%n%xException</pattern>
+    </encoder>
+  </appender>
 ```
 
 ## Akka logging configuration
