@@ -321,6 +321,9 @@ object Samples {
     //#streams1
     import play.api.mvc._
     import akka.stream.scaladsl._
+    import scala.util.Success
+    import scala.util.Failure
+    import scala.concurrent.ExecutionContext.Implicits.global
 
     def socket = WebSocket.accept[String, String] { request =>
       // Log events to the console
@@ -330,6 +333,16 @@ object Samples {
       val out = Source.single("Hello!").concat(Source.maybe)
 
       Flow.fromSinkAndSource(in, out)
+      .watchTermination(){ (_, future) =>
+      future.onComplete {
+        case Success(_) =>
+        //detects when client disconnected
+          println("Client disconnected")
+        case Failure(t) =>
+        //detects a disconnection failure
+          println(s"Disconnection failure: ${t.getMessage}")
+      }
+    }
     }
     //#streams1
 
