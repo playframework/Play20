@@ -5,9 +5,9 @@
 package play.filters.ip
 
 import javax.inject.{Inject, Provider, Singleton}
+import play.api.{Configuration, Environment, Logger}
 import play.api.inject.{SimpleModule, bind}
 import play.api.mvc._
-import play.api.{Configuration, Environment, Logger}
 
 /**
  * A filter to restrict access to IP allow list.
@@ -19,7 +19,7 @@ import play.api.{Configuration, Environment, Logger}
  * https://www.playframework.com/documentation/latest/AllowedIPFilter
  */
 @Singleton
-class AllowedIPFilter @Inject()(config: AllowedIPConfiguration) extends EssentialFilter {
+class AllowedIPFilter @Inject() (config: AllowedIPConfiguration) extends EssentialFilter {
 
   private val logger = Logger(getClass)
 
@@ -56,13 +56,13 @@ case class AllowedIPConfiguration(
 )
 
 private object IPKeys {
-  val ipEnabled          = "play.filters.ip.enabled"
-  val allowList          = "play.filters.ip.allowList"
-  val excludePaths       = "play.filters.ip.excludePaths"
+  val ipEnabled    = "play.filters.ip.enabled"
+  val allowList    = "play.filters.ip.allowList"
+  val excludePaths = "play.filters.ip.excludePaths"
 }
 
 @Singleton
-class AllowedIPConfigurationProvider @Inject()(c: Configuration, e: Environment)
+class AllowedIPConfigurationProvider @Inject() (c: Configuration, e: Environment)
     extends Provider[AllowedIPConfiguration] {
 
   private val logger = Logger(getClass)
@@ -72,8 +72,8 @@ class AllowedIPConfigurationProvider @Inject()(c: Configuration, e: Environment)
     if (!ipEnabled) {
       logger.warn("You set AllowedIPFilter in your application.conf but it's disabled!")
     }
-    val allowList  = c.getOptional[Seq[String]](IPKeys.allowList).getOrElse(Seq())
-    val excludePaths  = c.getOptional[Seq[String]](IPKeys.excludePaths).getOrElse(Seq())
+    val allowList    = c.getOptional[Seq[String]](IPKeys.allowList).getOrElse(Seq())
+    val excludePaths = c.getOptional[Seq[String]](IPKeys.excludePaths).getOrElse(Seq())
 
     AllowedIPConfiguration(
       ipEnabled,

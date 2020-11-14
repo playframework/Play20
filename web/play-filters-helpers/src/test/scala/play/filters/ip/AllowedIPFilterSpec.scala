@@ -9,6 +9,7 @@ import java.security.cert.X509Certificate
 
 import com.typesafe.config.ConfigFactory
 import javax.inject.Inject
+import play.api.{Configuration, Environment}
 import play.api.http.HttpFilters
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -16,7 +17,6 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.mvc.request.RemoteConnection
 import play.api.test.{WithApplication, _}
-import play.api.{Configuration, Environment}
 
 private[ip] class TestFilters @Inject() (allowedIPFilter: AllowedIPFilter) extends HttpFilters {
   override def filters: Seq[EssentialFilter] = Seq(allowedIPFilter)
@@ -86,6 +86,7 @@ class AllowedIPFilterSpec extends PlaySpecification {
   private def request(path: String, ip: String) = {
     FakeRequest(method = "GET", path = path)
       .withConnection(new RemoteConnection {
+
         /**
          * The remote client's address.
          */
