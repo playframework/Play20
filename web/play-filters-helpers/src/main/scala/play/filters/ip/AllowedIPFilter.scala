@@ -4,9 +4,14 @@
 
 package play.filters.ip
 
-import javax.inject.{Inject, Provider, Singleton}
-import play.api.{Configuration, Environment, Logger}
-import play.api.inject.{SimpleModule, bind}
+import javax.inject.Inject
+import javax.inject.Provider
+import javax.inject.Singleton
+import play.api.Configuration
+import play.api.Environment
+import play.api.Logger
+import play.api.inject.SimpleModule
+import play.api.inject.bind
 import play.api.mvc._
 
 /**
