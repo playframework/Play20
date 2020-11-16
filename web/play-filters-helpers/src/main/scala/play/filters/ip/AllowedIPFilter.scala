@@ -4,15 +4,18 @@
 
 package play.filters.ip
 
+import com.google.common.net.InetAddresses
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
-import play.api.Configuration
-import play.api.Environment
-import play.api.Logger
 import play.api.inject.SimpleModule
 import play.api.inject.bind
 import play.api.mvc._
+import play.api.routing.HandlerDef
+import play.api.routing.Router
+import play.api.Configuration
+import play.api.Environment
+import play.api.Logger
 
 /**
  * A filter to restrict access to IP allow list.
@@ -33,7 +36,7 @@ class AllowedIPFilter @Inject() (config: AllowedIPConfiguration) extends Essenti
 
     if (!this.config.ipEnabled || isAllowed(req)) {
       next(req)
-    } else if (isExcluded(req)) {
+    } else if (isNoIPCheck(req)) {
       logger.debug(s"Not blocked because ${req.path} is an excluded path.")
       next(req)
     } else {
@@ -43,27 +46,30 @@ class AllowedIPFilter @Inject() (config: AllowedIPConfiguration) extends Essenti
   }
 
   @inline
-  private[this] def isAllowed(req: RequestHeader): Boolean = {
+  private[this] def isAllowed(req: RequestHeader): Boolean =
     this.config.allowList.contains(req.remoteAddress)
-  }
 
   @inline
-  private[this] def isExcluded(req: RequestHeader): Boolean = {
-    this.config.excludePaths.contains(req.path)
+  private[this] def isNoIPCheck(req: RequestHeader): Boolean = {
+    // See more about it:
+    // https://www.playframework.com/documentation/2.8.x/Highlights26#Route-modifier-tags
+    req.attrs
+      .get[HandlerDef](Router.Attrs.HandlerDef)
+      .map(_.modifiers)
+      .getOrElse(List.empty)
+      .contains("noipcheck")
   }
 
 }
 
 case class AllowedIPConfiguration(
     ipEnabled: Boolean,
-    allowList: Seq[String],
-    excludePaths: Seq[String]
+    allowList: Seq[String]
 )
 
 private object IPKeys {
-  val ipEnabled    = "play.filters.ip.enabled"
-  val allowList    = "play.filters.ip.allowList"
-  val excludePaths = "play.filters.ip.excludePaths"
+  val ipEnabled = "play.filters.ip.enabled"
+  val allowList = "play.filters.ip.allowList"
 }
 
 @Singleton
@@ -77,13 +83,11 @@ class AllowedIPConfigurationProvider @Inject() (c: Configuration, e: Environment
     if (!ipEnabled) {
       logger.warn("You set AllowedIPFilter in your application.conf but it's disabled!")
     }
-    val allowList    = c.getOptional[Seq[String]](IPKeys.allowList).getOrElse(Seq())
-    val excludePaths = c.getOptional[Seq[String]](IPKeys.excludePaths).getOrElse(Seq())
+    val allowList = c.getOptional[Seq[String]](IPKeys.allowList).getOrElse(Seq())
 
     AllowedIPConfiguration(
       ipEnabled,
-      allowList,
-      excludePaths
+      allowList.map(InetAddresses.forString).map(_.getHostAddress)
     )
   }
 }
