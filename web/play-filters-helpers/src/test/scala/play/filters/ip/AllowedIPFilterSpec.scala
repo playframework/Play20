@@ -16,9 +16,12 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.mvc.request.RemoteConnection
-import play.api.routing.{HandlerDef, Router}
-import play.api.test.{WithApplication, _}
-import play.api.{Configuration, Environment}
+import play.api.routing.HandlerDef
+import play.api.routing.Router
+import play.api.test.WithApplication
+import play.api.test._
+import play.api.Configuration
+import play.api.Environment
 
 private[ip] class TestFilters @Inject() (allowedIPFilter: AllowedIPFilter) extends HttpFilters {
   override def filters: Seq[EssentialFilter] = Seq(allowedIPFilter)
@@ -41,7 +44,7 @@ class AllowedIPFilterSpec extends PlaySpecification {
                  |play.filters.ip.allowList = []
       """.stripMargin)
     ) with Injecting {
-      val req    = request("/my-excluded-path", "192.168.0.2")
+      val req = request("/my-excluded-path", "192.168.0.2")
         .addAttr(
           Router.Attrs.HandlerDef,
           HandlerDef(
@@ -67,7 +70,7 @@ class AllowedIPFilterSpec extends PlaySpecification {
                  |play.filters.ip.allowList = [ ""192.167.0.3"" ]
       """.stripMargin)
     ) with Injecting {
-      val req    = request("/my-excluded-path", "192.168.0.3")
+      val req = request("/my-excluded-path", "192.168.0.3")
         .addAttr(
           Router.Attrs.HandlerDef,
           HandlerDef(
@@ -138,7 +141,7 @@ class AllowedIPFilterSpec extends PlaySpecification {
                  |play.filters.ip.allowList = []
       """.stripMargin)
     ) with Injecting {
-      val req    = request("/my-excluded-path", "8F:F3B::FF")
+      val req = request("/my-excluded-path", "8F:F3B::FF")
         .addAttr(
           Router.Attrs.HandlerDef,
           HandlerDef(
@@ -164,7 +167,7 @@ class AllowedIPFilterSpec extends PlaySpecification {
                  |play.filters.ip.allowList = [ "8F:F3B::FF" ]
       """.stripMargin)
     ) with Injecting {
-      val req    = request("/my-excluded-path", "8F:F3B::FF")
+      val req = request("/my-excluded-path", "8F:F3B::FF")
         .addAttr(
           Router.Attrs.HandlerDef,
           HandlerDef(
