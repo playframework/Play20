@@ -22,10 +22,12 @@ To set remote address to allow list you can use `play.filters.ip.allowList`.
 play.filters.ip.allowList = [ '192.168.0.1', '127.0.0.1' ]
 ```
 
-## Excluded Paths
-
-If you don't want to check the HTTP request remote address to any route path you can use `play.filters.ip.excludePaths`.
+If you don't want to check the HTTP request remote address to any route path you can use `+ noipcheck` in your route file.
 
 ```
-play.filters.ip.excludePaths = [ '/path1', '/path2' ]
++ noipcheck
+GET /path1 MyController.foo
+
++ noipcheck
+GET /path2 MyController.bar     
 ```
