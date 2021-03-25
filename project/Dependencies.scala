@@ -201,10 +201,14 @@ object Dependencies {
     "org.webjars" % "prettify" % "4-Mar-2013-1" % "webjars"
   )
 
+  val playdocJpaDependencies = Seq(
+    "javax.persistence" % "javax.persistence-api" % "2.2"
+  )
+
   val playDocVersion = "2.1.0"
   val playDocsDependencies = Seq(
     "com.typesafe.play" %% "play-doc" % playDocVersion
-  ) ++ playdocWebjarDependencies
+  ) ++ playdocWebjarDependencies ++ playdocJpaDependencies
 
   val streamsDependencies = Seq(
     "org.reactivestreams" % "reactive-streams" % "1.0.3",
