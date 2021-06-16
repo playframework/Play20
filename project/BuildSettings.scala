@@ -317,6 +317,8 @@ object BuildSettings {
       ),
       ProblemFilters
         .exclude[ReversedMissingMethodProblem]("play.api.db.evolutions.EvolutionsDatasourceConfig.substitutionsEscape"),
+      // Changed params of the PlayRequestHandler constructor, which is private[play] anyway
+      ProblemFilters.exclude[DirectMissingMethodProblem]("play.core.server.netty.PlayRequestHandler.this"),
     ),
     (Compile / unmanagedSourceDirectories) += {
       val suffix = CrossVersion.partialVersion(scalaVersion.value) match {
