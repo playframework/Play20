@@ -1,0 +1,6 @@
+#
+# Copyright (C) Lightbend Inc. <https://www.lightbend.com>
+#
+
+->      /c1       sample1.Routes
+->      /c2       sample2.Routes
